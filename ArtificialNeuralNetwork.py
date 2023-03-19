@@ -41,12 +41,20 @@ if __name__ == "__main__":
                 print("Network", i, j, "has this connection:", network[0][j].connections)
                 print("Network", i, j, " has this collector val: ", network[0][j].collector)
 
-        elif i < numLayers:  # i is going to be 1 in this case, which is smalelr than 2
+        elif i+1 < numLayers:  # i is going to be 1 in this case, which is smalelr than 2
             print("Network 2: ")
             for j in range(len(network[i])):
-                    network[i][j]=Node(network[i])
+                    network[i][j]=Node(network[i+1])
                     print("Network", i, j, "has this connection:", network[i][j].connections)
                     print("Network", i, j, " has this collector val: ", network[i][j].collector)
+
+        else:
+            for j in range(len(network[i])):
+                print("wtf")
+                network[i][j] = Node(None)
+                print("Network", i, j, "has this connection:", network[i][j].connections)
+                print("Network", i, j, " has this collector val: ", network[i][j].collector)
+
 
 
 
@@ -54,9 +62,13 @@ if __name__ == "__main__":
     print("this is network 1 ", network[1])
     print("this is network 2 ", network[2])
 
-    print("This is network 0-0 connections: ")
-    print("This is network 0-0 connections: ")
+    print("This is network 0-0 connections: ", network[0][0].connections)
+    print("This is network 0-1 connections: ", network[0][1].connections)
+    print("This is network 0-1 connections: ", network[0][2].connections)
+    print("This is network 0-1 connections: ", network[0][3].connections)
 
+    print("This is network 1-0 connections: ", network[1][0].connections)
+    print("This is network 1-1 connections: ", network[1][1].connections)
 
 
     print("value [0][0]", network[0][0].collector)
