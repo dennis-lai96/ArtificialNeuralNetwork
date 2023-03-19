@@ -11,11 +11,16 @@ def print_array_of_arrays(arrays):
 
 if __name__ == "__main__":
     network_structure = []
-    # f = open("NumNodes", "r")
-    # #figure out txt to array later...
-    # print(f.read().split(','))
 
-    network_structure = [4, 2, 1]
+    #Open up the file and turn it in to an int list.
+    f = open("NumNodes", "r")
+    network_structure = [int(num) for num in f.read().split(",")]
+    print(network_structure)
+
+    #Open up the file and turn it in to a float list.
+
+    
+    print("Network structure is of type" , type(network_structure))
     initial_values = [4.1, 5.5, 3.3, 10.01]
     # Now we need to make an empty Node array of arrays using this.
 
@@ -53,13 +58,15 @@ if __name__ == "__main__":
 
         #Last Layer
         else:
+            print("Last layer: ")
             for j in range(len(network[i])):
-                print("Last layer")
+
                 network[i][j] = Node(None)
                 print("Network", i, j, "has this connection:", network[i][j].connections)
-                print("Network", i, j, " has this collector val: ", network[i][j].collector)
+
                 for k in range(len(network[i-1])):
                     network[i][j].collector = network[i][j].collector+ network[i-1][k].collector
+                    print("Network", i, j, " has this collector val: ", network[i][j].collector)
 
 
 
