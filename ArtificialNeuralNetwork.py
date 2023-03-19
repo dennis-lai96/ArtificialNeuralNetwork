@@ -16,17 +16,18 @@ if __name__ == "__main__":
     f = open("NumNodes", "r")
     network_structure = [int(num) for num in f.read().split(",")]
     print(network_structure)
-
+    f.close()
+    print("Network structure is of type", type(network_structure))
     #Open up the file and turn it in to a float list.
 
-    
-    print("Network structure is of type" , type(network_structure))
-    initial_values = [4.1, 5.5, 3.3, 10.01]
+
+    f = open("InitialValues", "r")
+    initial_values = [float(num) for num in f.read().split(",")]
     # Now we need to make an empty Node array of arrays using this.
 
     network = [[0] * size for size in network_structure]
     numLayers = len(network)
-    print("nubmer of layers: ", numLayers)
+    print("number of layers: ", numLayers)
     print_array_of_arrays(network)
     print(type(network))
     print("array[1] is ", network[1])
