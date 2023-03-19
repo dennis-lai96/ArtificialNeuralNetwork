@@ -31,30 +31,37 @@ if __name__ == "__main__":
     # if int i > 0, array[i] receives array[i-1]'s first address.
     # afterwards, array[i] nodes all receive in accumulator, all the values from previous arrays accumulators.
 
+
     for i in range(numLayers):
+        # Starting Layer
         if i == 0:
+            print("Network 0: ")
             sum = 0
             for j in range(len(initial_values)):
                 x = initial_values[j]
                 network[0][j] = Node(network[i + 1])
                 network[0][j].collector = x
+
                 print("Network", i, j, "has this connection:", network[0][j].connections)
                 print("Network", i, j, " has this collector val: ", network[0][j].collector)
-
-        elif i+1 < numLayers:  # i is going to be 1 in this case, which is smalelr than 2
-            print("Network 2: ")
+        #hidden layer
+        elif i+1 < numLayers:  # i is going to be 1 in this case, which is smaller than 2
+            print("Network ", i, ": ")
             for j in range(len(network[i])):
                     network[i][j]=Node(network[i+1])
                     print("Network", i, j, "has this connection:", network[i][j].connections)
                     print("Network", i, j, " has this collector val: ", network[i][j].collector)
 
+
+
+
+        #Last Layer
         else:
             for j in range(len(network[i])):
-                print("wtf")
+                print("Last layer")
                 network[i][j] = Node(None)
                 print("Network", i, j, "has this connection:", network[i][j].connections)
                 print("Network", i, j, " has this collector val: ", network[i][j].collector)
-
 
 
 
@@ -66,6 +73,7 @@ if __name__ == "__main__":
     print("This is network 0-1 connections: ", network[0][1].connections)
     print("This is network 0-1 connections: ", network[0][2].connections)
     print("This is network 0-1 connections: ", network[0][3].connections)
+
 
     print("This is network 1-0 connections: ", network[1][0].connections)
     print("This is network 1-1 connections: ", network[1][1].connections)
