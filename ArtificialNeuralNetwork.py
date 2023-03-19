@@ -27,18 +27,19 @@ if __name__ == "__main__":
 
     network = [[0] * size for size in network_structure]
     numLayers = len(network)
-    print("number of layers: ", numLayers)
+
     print_array_of_arrays(network)
-    print(type(network))
-    print("array[1] is ", network[1])
 
 
 
+
+    #this will iterate through the number of layers the neural network contains
     for i in range(numLayers):
         # Starting Layer
         if i == 0:
             print("Network 0: ")
             sum = 0
+            #Sets Layer 0's array values to initial values and points it to the next array
             for j in range(len(initial_values)):
                 x = initial_values[j]
                 network[0][j] = Node(network[i + 1])
@@ -49,8 +50,10 @@ if __name__ == "__main__":
         #hidden layer
         elif i < numLayers-1:  # i is going to be 1 in this case, which is smaller than 2
             print("Network ", i, ": ")
+            #iterates through the current network. Sets Node connection to next array
             for j in range(len(network[i])):
                     network[i][j]=Node(network[i+1])
+                    #Collector in this will accumulate itself with the PREVIOUS layer's collector values.
                     for k in range(len(network[i-1])):
                         network[i][j].collector = network[i][j].collector+ network[i-1][k].collector
                     print("Network", i, j, "has this connection:", network[i][j].connections)
@@ -61,34 +64,28 @@ if __name__ == "__main__":
         else:
             print("Last layer: ")
             for j in range(len(network[i])):
-
+                #Creates Nodes in all of array slots pointing to None since it's the last layer.
                 network[i][j] = Node(None)
                 print("Network", i, j, "has this connection:", network[i][j].connections)
-
+                #Same collector method as before. could probably make this a method
                 for k in range(len(network[i-1])):
                     network[i][j].collector = network[i][j].collector+ network[i-1][k].collector
                     print("Network", i, j, " has this collector val: ", network[i][j].collector)
 
 
 
-    print("this is network 0 ", network[0])
+    #Printing All results
+    for i in range(numLayers):
+        print("This is network[", i,"] ", network[i])
+
+    for i in range(numLayers):
+        for j in range(len(network[i])):
+            print("Network[", i, "][", j, "] connections", network[i][j].connections)
+
+    for i in range(numLayers):
+        for j in range(len(network[i])):
+            print("Network[", i, "][",j,"] collector value", network[i][j].collector)
 
 
-    print("This is network 0-0 connections: ", network[0][0].connections)
-    print("This is network 0-1 connections: ", network[0][1].connections)
-    print("This is network 0-2 connections: ", network[0][2].connections)
-    print("This is network 0-3 connections: ", network[0][3].connections)
 
-    print("this is network 1 ", network[1])
-    print("This is network 1-0 connections: ", network[1][0].connections)
-    print("This is network 1-1 connections: ", network[1][1].connections)
-
-    print("this is network 2 ", network[2])
-    print("value [0][0]", network[0][0].collector)
-    print("value [0][1]", network[0][1].collector)
-    print("value [0][2]", network[0][2].collector)
-    print("value [0][3]", network[0][3].collector)
-    print("value [1][0]", network[1][0].collector)
-    print("value [1][1]", network[1][1].collector)
-    print("value [2][0]", network[2][0].collector)
 
