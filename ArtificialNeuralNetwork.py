@@ -1,7 +1,10 @@
+import random
+
 class Node:
     def __init__(self, connections):
         self.collector = 0.0
         self.connections = connections
+        self.weight = 1.0
 
 
 def print_array_of_arrays(arrays):
@@ -44,7 +47,9 @@ if __name__ == "__main__":
                 x = initial_values[j]
                 network[0][j] = Node(network[i + 1])
                 network[0][j].collector = x
+                network[0][j].weight = random.uniform(0,1)
 
+                
                 print("Network", i, j, "has this connection:", network[0][j].connections)
                 print("Network", i, j, " has this collector val: ", network[0][j].collector)
         #hidden layer
@@ -53,9 +58,11 @@ if __name__ == "__main__":
             #iterates through the current network. Sets Node connection to next array
             for j in range(len(network[i])):
                     network[i][j]=Node(network[i+1])
+                    network[i][j].weight = random.uniform(0,1)
                     #Collector in this will accumulate itself with the PREVIOUS layer's collector values.
                     for k in range(len(network[i-1])):
-                        network[i][j].collector = network[i][j].collector+ network[i-1][k].collector
+                        #Random weights added? I think? If its borked just remove the multiplier
+                        network[i][j].collector = network[i][j].collector+ (network[i-1][k].collector*network[i-1][k].weight)
                     print("Network", i, j, "has this connection:", network[i][j].connections)
                     print("Network", i, j, " has this collector val: ", network[i][j].collector)
 
@@ -64,12 +71,14 @@ if __name__ == "__main__":
         else:
             print("Last layer: ")
             for j in range(len(network[i])):
+
                 #Creates Nodes in all of array slots pointing to None since it's the last layer.
                 network[i][j] = Node(None)
+                network[i][j].weight = random.uniform(0,1)
                 print("Network", i, j, "has this connection:", network[i][j].connections)
                 #Same collector method as before. could probably make this a method
                 for k in range(len(network[i-1])):
-                    network[i][j].collector = network[i][j].collector+ network[i-1][k].collector
+                    network[i][j].collector = network[i][j].collector+ (network[i-1][k].collector*network[i-1][k].weight)
                     print("Network", i, j, " has this collector val: ", network[i][j].collector)
 
 
@@ -78,9 +87,14 @@ if __name__ == "__main__":
     for i in range(numLayers):
         print("This is network[", i,"] ", network[i])
 
+
     for i in range(numLayers):
         for j in range(len(network[i])):
             print("Network[", i, "][", j, "] connections", network[i][j].connections)
+
+    for i in range(numLayers):
+        for j in range(len(network[i])):
+            print("Network[", i, "][",j,"] weight value", network[i][j].weight)
 
     for i in range(numLayers):
         for j in range(len(network[i])):
