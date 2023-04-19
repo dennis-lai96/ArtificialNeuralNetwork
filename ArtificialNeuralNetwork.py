@@ -91,6 +91,10 @@ class NeuralNetwork:
                 if sum_error <= target_error:
                     print("Target Error Reached error=%.3f" % (sum_error))
                     return
+                self.backwardPropogate_error(expected)
+                self.update_weights()(l_rate)
+            print('>epoch=%d, lrate=%.3f, error=%.3f' % (epoch, l_rate, sum_error))
+
 
     def backwardPropogate_error(self):
         #???????????
