@@ -7,99 +7,66 @@ class Node:
         self.weight = 1.0
 
 
-def print_array_of_arrays(arrays):
-    for array in arrays:
-        print(array)
+class NeuralNetwork:
+    def __init__(self, num_nodes_file, initial_values_file):
+        self.network_structure = self.read_integer_list(num_nodes_file)
+        self.initial_values = self.read_float_list(initial_values_file)
+        self.network = self.build_network()
+
+    def read_integer_list(self, filename):
+        with open(filename, "r") as f:
+            return [int(num) for num in f.read().split(",")]
+
+    def read_float_list(self, filename):
+        with open(filename, "r") as f:
+            return [float(num) for num in f.read().split(",")]
+
+    def build_network(self):
+        network = [[0] * size for size in self.network_structure]
+        num_layers = len(network)
+
+        for i in range(num_layers):
+            if i == 0:
+                for j in range(len(self.initial_values)):
+                    x = self.initial_values[j]
+                    network[0][j] = Node(network[i + 1])
+                    network[0][j].collector = x
+                    network[0][j].weight = random.uniform(0, 1)
+            elif i < num_layers-1:
+                for j in range(len(network[i])):
+                    network[i][j] = Node(network[i+1])
+                    network[i][j].weight = random.uniform(0, 1)
+                    for k in range(len(network[i-1])):
+                        network[i][j].collector += (network[i-1][k].collector * network[i-1][k].weight)
+            else:
+                for j in range(len(network[i])):
+                    network[i][j] = Node(None)
+                    network[i][j].weight = random.uniform(0, 1)
+                    for k in range(len(network[i-1])):
+                        network[i][j].collector += (network[i-1][k].collector * network[i-1][k].weight)
+        return network
+
+    def print_array_of_arrays(self):
+        for array in self.network:
+            print(array)
+
+    def print_results(self):
+        num_layers = len(self.network)
+        for i in range(num_layers):
+            print(f"This is network[{i}]", self.network[i])
+        for i in range(num_layers):
+            for j in range(len(self.network[i])):
+                print(f"Network[{i}][{j}] connections:", self.network[i][j].connections)
+        for i in range(num_layers):
+            for j in range(len(self.network[i])):
+                print(f"Network[{i}][{j}] weight value:", self.network[i][j].weight)
+        for i in range(num_layers):
+            for j in range(len(self.network[i])):
+                print(f"Network[{i}][{j}] collector value:", self.network[i][j].collector)
 
 
 if __name__ == "__main__":
-    network_structure = []
-
-    #Open up the file and turn it in to an int list.
-    f = open("NumNodes", "r")
-    network_structure = [int(num) for num in f.read().split(",")]
-    print(network_structure)
-    f.close()
-    print("Network structure is of type", type(network_structure))
-    #Open up the file and turn it in to a float list.
-
-
-    f = open("InitialValues", "r")
-    initial_values = [float(num) for num in f.read().split(",")]
-    # Now we need to make an empty Node array of arrays using this.
-
-    network = [[0] * size for size in network_structure]
-    numLayers = len(network)
-
-    print_array_of_arrays(network)
-
-
-
-
-    #this will iterate through the number of layers the neural network contains
-    for i in range(numLayers):
-        # Starting Layer
-        if i == 0:
-            print("Network 0: ")
-            sum = 0
-            #Sets Layer 0's array values to initial values and points it to the next array
-            for j in range(len(initial_values)):
-                x = initial_values[j]
-                network[0][j] = Node(network[i + 1])
-                network[0][j].collector = x
-                network[0][j].weight = random.uniform(0,1)
-
-                
-                print("Network", i, j, "has this connection:", network[0][j].connections)
-                print("Network", i, j, " has this collector val: ", network[0][j].collector)
-        #hidden layer
-        elif i < numLayers-1:  # i is going to be 1 in this case, which is smaller than 2
-            print("Network ", i, ": ")
-            #iterates through the current network. Sets Node connection to next array
-            for j in range(len(network[i])):
-                    network[i][j]=Node(network[i+1])
-                    network[i][j].weight = random.uniform(0,1)
-                    #Collector in this will accumulate itself with the PREVIOUS layer's collector values.
-                    for k in range(len(network[i-1])):
-                        #Random weights added? I think? If its borked just remove the multiplier
-                        network[i][j].collector = network[i][j].collector+ (network[i-1][k].collector*network[i-1][k].weight)
-                    print("Network", i, j, "has this connection:", network[i][j].connections)
-                    print("Network", i, j, " has this collector val: ", network[i][j].collector)
-
-
-        #Last Layer
-        else:
-            print("Last layer: ")
-            for j in range(len(network[i])):
-
-                #Creates Nodes in all of array slots pointing to None since it's the last layer.
-                network[i][j] = Node(None)
-                network[i][j].weight = random.uniform(0,1)
-                print("Network", i, j, "has this connection:", network[i][j].connections)
-                #Same collector method as before. could probably make this a method
-                for k in range(len(network[i-1])):
-                    network[i][j].collector = network[i][j].collector+ (network[i-1][k].collector*network[i-1][k].weight)
-                    print("Network", i, j, " has this collector val: ", network[i][j].collector)
-
-
-
-    #Printing All results
-    for i in range(numLayers):
-        print("This is network[", i,"] ", network[i])
-
-
-    for i in range(numLayers):
-        for j in range(len(network[i])):
-            print("Network[", i, "][", j, "] connections", network[i][j].connections)
-
-    for i in range(numLayers):
-        for j in range(len(network[i])):
-            print("Network[", i, "][",j,"] weight value", network[i][j].weight)
-
-    for i in range(numLayers):
-        for j in range(len(network[i])):
-            print("Network[", i, "][",j,"] collector value", network[i][j].collector)
-
-
-
-
+    print("MAKING THE NEURAL NETWORK")
+    nn = NeuralNetwork("NumNodes", "InitialValues")
+    nn.print_array_of_arrays()
+    nn.print_results()
