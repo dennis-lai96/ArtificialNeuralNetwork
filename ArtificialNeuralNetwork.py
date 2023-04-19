@@ -65,6 +65,40 @@ class NeuralNetwork:
                 print(f"Network[{i}][{j}] collector value:", self.network[i][j].collector)
 
 
+    def forward_propagate(self, inputs):
+        #Setting input values to the first layer's collector values
+        for i in range(len(inputs)):
+            self.network[0][i].collector = inputs[i]
+        #Accumulates similar to the build-network func
+        for i in range(1, len(self.network)):
+            for j in range(len(self.network[i])):
+                collector = 0.0
+                for k in range(len(self.network[i-1])):
+                    collector += (self.network[i-1][k].collector * self.network[i-1][k].weight)
+                self.network[i][j].collector = collector
+
+    #Okay honestly i have no idea what any of this is supposed to DO.
+    def train_network(self, train, l_rate, n_epoch, target_error):
+        number_of_inputs = len(self.network[0])
+        for epoch in range(n_epoch):
+            sum_error = 0
+            for row in train:
+                self.forward_propagate(row)
+                expected = []
+                for i in range(len(self.network[-1])):
+                    expected.append(row[number_of_inputs + i])
+                    sum_error += (row[number_of_inputs + i] - self.network[-1][i].collector)**2
+                if sum_error <= target_error:
+                    print("Target Error Reached error=%.3f" % (sum_error))
+                    return
+
+    def backwardPropogate_error(self):
+        #???????????
+        return "hahhahahahahahahahahaha"
+
+    def update_weights(self):
+        return "hahahahahahahahahah"
+
 if __name__ == "__main__":
     print("MAKING THE NEURAL NETWORK")
     nn = NeuralNetwork("NumNodes", "InitialValues")
