@@ -77,7 +77,7 @@ class NeuralNetwork:
                     collector += (self.network[i-1][k].collector * self.network[i-1][k].weight)
                 self.network[i][j].collector = collector
 
-    #Okay honestly i have no idea what any of this is supposed to DO.
+    #code given by prof may need to modify
     def train_network(self, train, l_rate, n_epoch, target_error):
         number_of_inputs = len(self.network[0])
         for epoch in range(n_epoch):
@@ -96,11 +96,28 @@ class NeuralNetwork:
             print('>epoch=%d, lrate=%.3f, error=%.3f' % (epoch, l_rate, sum_error))
 
 
-    def backwardPropogate_error(self):
-        #???????????
-        return "hahhahahahahahahahahaha"
+    def backwardPropogate_error(self,expected   ):
+        for i in reversed(len(self.network)):
+            layer = self.network[i]
+            errors = []
+            #basically if we're not in the last layer
+            if i !=len(self.network)-1:
+                #iterating through every other layers(not the last) errors in each node
+                for j in range(len(layer)):
+                    error = 0.0
+                    for neuron in self.network[i+1]:
+                        error+=(neuron.weight*neuron.delta)
+                    errors.append(error)
+            else: #dealing with the last layer's neruons
+                for j in range(len(layer)):
+                    neuron=layer[j]
+                    #expected last 0 or 1 minus whatever we have on the last neuron
+                    errors.append(expected[j]-neuron.collector)
 
-    def update_weights(self):
+
+
+
+    def update_weights(self,l_rate):
         return "hahahahahahahahahah"
 
 if __name__ == "__main__":
